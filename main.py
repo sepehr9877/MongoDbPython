@@ -10,6 +10,13 @@ MyDatabase=client["NewDataBase"]
 BoxOfficeDb=client["BoxOffice"]
 MovieCollection=MyDatabase["Movies"]
 BoxOffice_Collection=BoxOfficeDb["BoxOfficeDataSet"]
+UserDb=client["User"]
+User_Collection=UserDb["UserCollection"]
+def insert_file_to_Db():
+     with open('users.json') as file:
+         file_data=json.load(file)
+     if isinstance(file_data,list):
+        User_Collection.insert_many(file_data)
 def inserting_moviefile():
     with open('tv-shows.json') as file:
         file_data=json.load(file)
@@ -136,3 +143,61 @@ def eight():
     ])
     for i in agg_col:
         pprint(i)
+#Using Upsert
+def nine():
+    creat_sport_collection=UserDb["Sport"]
+    creat_sport_collection.update_many({},{"$set":{"title":"Soccer","requiresTeam":True}},upsert=True)
+    creat_sport_collection.update_many({"title":"FootBall"},{"$set":{"requiresTeam":True}},upsert=True)
+    creat_sport_collection.update_many({"title":"HorseRiding"},{"$set":{"requiresTeam":False}},upsert=True)
+    creat_sport_collection.update_many({"title":"Running"},{"$set":{"requiresTeam":False}},upsert=True)
+    creat_sport_collection.update_many({"requiresTeam":True},{"$set":{"minPlayer":11}},upsert=True)
+    creat_sport_collection.update_many({"requiresTeam":True},{"$inc":{"minPlayer":10}})
+#Modifying an Embeded Array
+def ten():
+
+    selected_ele=User_Collection.find({
+        "hobbies":
+            {"$elemMatch":{"title":"Sports","frequency":{"$gte":3}}}
+    })
+    updated_element=User_Collection.update_many({
+       "hobbies":{"$elemMatch":{"title":"Sports","frequency":{"$gte":3}}}
+       },
+           {"$set":{"hobbies.$.highFrequency":True}}
+       )
+    for item in selected_ele:
+        pprint(item)
+def eleven():
+    add_new_element=User_Collection.update_many(
+        {"hobbies":{"$elemMatch":{"title":"Yoga","frequency":3}}},
+        {"$set":{"hobbies.$[el].Coach":"Sepehr"}},
+        array_filters=[{"el.title":"Sports"}]
+    )
+
+#Add new Array into Hobbies
+def towelve():
+    insert_one_el=User_Collection.update_many(
+        {"hobbies":{"$elemMatch":{"title":"Cooking","frequency":5}}},
+        {"$push":{"hobbies":{"title":"Meeting With Friends","frequency":2}}}
+    )
+#insert Multiple Array
+def thirteen():
+    insert_multilple_ar=User_Collection.update_many(
+        {"hobbies.Coach":"Sepehr"},
+        {"$push": {"hobbies":{"$each":[{"title":"Drinking Wine","frequency":1},
+                                       {"title":"Hiking","frequency":3}
+                                       ],
+                              "$sort":{"frequency":-1}
+                              }
+                   }
+         }
+    )
+def fourteen():
+    insert_el=User_Collection.update_many(
+        {"hobbies":{"$elemMatch":{"title":"Cooking","frequency":5}}},
+        {"$addToSet":{"hobbies":{"title":"Meeting With Friends","frequency":2}}}
+    )
+    #this Wont be inserted
+    
+
+
+
