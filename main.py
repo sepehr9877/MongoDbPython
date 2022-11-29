@@ -197,7 +197,38 @@ def fourteen():
         {"$addToSet":{"hobbies":{"title":"Meeting With Friends","frequency":2}}}
     )
     #this Wont be inserted
-    
+def fiftheen():
+    aggregate_el=User_Collection.aggregate([
+        {"$unwind":"$hobbies"},
+        {"$group":{"_id":{"name":"$name"},"Allhobbies":{"$push":"$hobbies"}}}
+    ])
+    add_toset=User_Collection.aggregate([
+        {"$unwind":"$hobbies"},
+        {"$group":{"_id":{"name":"$name"},"AllHobbies":{"$addToSet":"$hobbies"}}}
+    ])
+    #remove Duplicate Element
+    for item in add_toset:
+        pprint(item)
+
+def sixteen():
+    #You Have To Use accumulator in Group
+    agg_el=BoxOffice_Collection.aggregate(
+       [
+           {"$unwind":"$meta"},
+           {"$project":{"_id":1,"title":1,"meta":"$meta.rating","genre":{"$arrayElemAt":["$genre",1]}}},
+        {"$sort":{"rating":1}},
+        {"$group":{
+            "_id":"$_id",
+            "Movie_title":{"$first":"$title"},
+            "IMDB_rating":{"$max":"$meta"},
+            "Genre":{"$first":"$genre"}}
+        },
+        {"$sort":{"IMDB_rating":-1}}
+        ]
+    )
+    for item in agg_el:
+        pprint(item)
+
 
 
 
