@@ -13,6 +13,14 @@ BoxOffice_Collection=BoxOfficeDb["BoxOfficeDataSet"]
 UserDb=client["User"]
 User_Collection=UserDb["UserCollection"]
 SportCollection=UserDb["Sport"]
+PersonDb=client["PersonDataBase"]
+PersonCollection=PersonDb["PersonCollection"]
+def insert_PersonFil():
+    with open('persons (1).json',encoding='utf-8') as file:
+        filedata=json.load(file)
+    if isinstance(filedata,list):
+        PersonCollection.insert_many(filedata)
+
 def insert_file_to_Db():
      with open('users.json') as file:
          file_data=json.load(file)
@@ -250,4 +258,80 @@ def newtwo():
 
     element=SportCollection.find()
     for el in element:
+        pprint(el)
+def newthree():
+    agg_el=PersonCollection.aggregate(
+        [
+            {"$match": {"dob.age":{"$gte": 50}}},
+            {"$group":{
+                "_id":{"gender":"$gender"},
+                "numPerson":{"$sum":1},
+                "AverageAge":{"$avg":"$dob.age"}
+            }}
+        ]
+    )
+    for item in agg_el:
+        pprint(item)
+def fournew():
+    agg_el=PersonCollection.aggregate([
+        {"$bucket":{
+            "groupBy":"$dob.age",
+            "boundaries":[0,18,30,50,80,120],
+            "output":{
+                "numPerson":{"$sum":1},
+                "averageAge":{"$avg":"$dob.age"}
+            }
+        }
+         }
+    ])
+    for item in agg_el:
+        pprint(item)
+
+#groupby the city and the gender and bucket
+def newfive():
+    elements=PersonCollection.aggregate([
+        {"$group":{
+            "_id":{"city":"$location.city"},
+            "gender":{"$first":"$gender"}
+        }}
+    ])
+    newelement=PersonCollection.aggregate([
+        {"$match":{"gender":"female"}},
+        {"$group":{
+            "_id":{"gender":"$gender"},
+            "count":{"$count":{}}
+        }
+         }
+    ])
+    for el in newelement:
+        pprint(el)
+def newsix():
+    newele=PersonCollection.aggregate(
+        [
+            {"$project": {"_id":1,"gender":1,"name":"$name.first","dob":"$dob.age"}},
+            {"$group":{
+                "_id":"$_id",
+                "Gender": {"$first":"$gender"},
+                "FirstName": {"$first":"$name"},
+                "Age":{"$first":"$dob"}
+            }
+            },
+            {"$sort":{"Age":1}}
+        ]
+    )
+    for item in newele:
+        pprint(item)
+def newseven():
+    findel=PersonCollection.aggregate(
+        [
+            {"$match":{"name.title":"miss","name.first":"maeva"}},
+            {"$group":{
+                "_id":{"Name":"$name.title"},
+                "firstname":{"$first":'$name.first'},
+                "Salary":{"$first":"$name.Salary"}
+            }
+             }
+        ]
+    )
+    for el in findel:
         pprint(el)
