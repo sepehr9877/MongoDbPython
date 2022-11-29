@@ -1,0 +1,53 @@
+[{
+  "gender": "male",
+  "name": {
+    "title": "mr",
+    "first": "tymon",
+    "last": "løkås"
+  },
+  "location": {
+    "street": "asalveien 9122",
+    "city": "lysøysund",
+    "state": "nord-trøndelag",
+    "postcode": "1540",
+    "coordinates": {
+      "latitude": "69.3238",
+      "longitude": "-32.1373"
+    },
+    "timezone": {
+      "offset": "+4:30",
+      "description": "Kabul"
+    }
+  },
+  "email": "tymon.løkås@example.com",
+  "login": {
+    "uuid": "92445c23-9626-46ea-ba0b-d4e8e18e55c0",
+    "username": "beautifulelephant957",
+    "password": "bert",
+    "salt": "3z4Z83Tk",
+    "md5": "d427f243e3d6928b67ae304e218e4c0c",
+    "sha1": "1ef57ac698d026d322c9025df8d6e1712c9a7f23",
+    "sha256": "ee3924fc837f1595e3433cce4abfd9612e6b2acc21872f8e15ec5e9c6595b160"
+  },
+  "dob": {
+    "date": "1994-05-17T17:58:06Z",
+    "age": 24
+  },
+  "registered": {
+    "date": "2002-05-18T19:56:17Z",
+    "age": 16
+  },
+  "phone": "65118007",
+  "cell": "47494416",
+  "id": {
+    "name": "FN",
+    "value": "17059412248"
+  },
+  "picture": {
+    "large": "https://randomuser.me/api/portraits/men/49.jpg",
+    "medium": "https://randomuser.me/api/portraits/med/men/49.jpg",
+    "thumbnail": "https://randomuser.me/api/portraits/thumb/men/49.jpg"
+  },
+  "nat": "NO"
+}
+]
