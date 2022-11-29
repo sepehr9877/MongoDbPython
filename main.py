@@ -12,6 +12,7 @@ MovieCollection=MyDatabase["Movies"]
 BoxOffice_Collection=BoxOfficeDb["BoxOfficeDataSet"]
 UserDb=client["User"]
 User_Collection=UserDb["UserCollection"]
+SportCollection=UserDb["Sport"]
 def insert_file_to_Db():
      with open('users.json') as file:
          file_data=json.load(file)
@@ -229,6 +230,24 @@ def sixteen():
     for item in agg_el:
         pprint(item)
 
+def newone():
+    element=SportCollection.find({})
+    player=[
+        {"name":"Ronaldo","age":37,"games":800},
+        {"name":"Messi","age":35,"games":500},
+        {"name":"Benzema","age":35,"games":600}
+    ]
+    SportCollection.update_many(
+        {"requiresTeam":True,"title":"Soccer"},
+        {"$set":{"PlayerDetail":player}}
+    )
+def newtwo():
+    SportCollection.update_many(
+        {"PlayerDetail":{"$elemMatch":{"name":"Messi","age":35}}},
+        {"$set":{"PlayerDetail.$[el].Salery":10000}},
+        array_filters=[{"el.name":"Ronaldo"}]
+    )
 
-
-
+    element=SportCollection.find()
+    for el in element:
+        pprint(el)
